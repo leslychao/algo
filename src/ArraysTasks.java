@@ -7,7 +7,47 @@ public class ArraysTasks {
     int[] arr2 = {7, 9, 10, 11};
     int[] arr3 = {2, 1, 5, 1, 3, 2};
 
-    System.out.println(maxSumSlidingWindow(arr3));
+    System.out.println(Arrays.toString(mergeTwoSortedArrays(arr2, arr1)));
+  }
+
+  public static double mediansOfTwoArrays(int[] arr1, int[] arr2) {
+    if (arr2.length < arr1.length) {
+      return mediansOfTwoArrays(arr2, arr1);
+    }
+
+    int n1 = arr1.length;
+    int n2 = arr2.length;
+
+    int total = n1 + n2;
+    int half = (total + 1) / 2;
+
+    int left = 0;
+    int right = n1;
+
+    while (left <= right) {
+      int i = (left + right) >>> 1;
+      int j = half - i;
+
+      int maxLeftA = i == 0 ? Integer.MIN_VALUE : arr1[i - 1];
+      int minRightA = i == n1 ? Integer.MAX_VALUE : arr1[i];
+      int maxLeftB = j == 0 ? Integer.MIN_VALUE : arr2[j - 1];
+      int minRightB = j == n2 ? Integer.MAX_VALUE : arr2[j];
+
+      if (maxLeftA <= minRightB && maxLeftB <= minRightA) {
+        if (total % 2 == 0) {
+          return (Math.max(maxLeftA, maxLeftB) + Math.min(minRightA, minRightB)) / 2.0;
+        }
+        return Math.max(maxLeftA, maxLeftB) + 0.0;
+      }
+
+      if (maxLeftA > minRightB) {
+        right = i - 1;
+      } else {
+        left = i + 1;
+      }
+    }
+
+    return -1;
   }
 
   public static int maxSumSlidingWindow(int[] arr) {
@@ -17,13 +57,14 @@ public class ArraysTasks {
     int windowsSum = 0;
     int maxWindowSum = 0;
 
-    for (int i = 0; i<n; i++) {
+    for (int i = 0; i < n; i++) {
       windowsSum += arr[i];
-      if (i>= k-1) {
+      if (i >= k - 1) {
         maxWindowSum = Math.max(windowsSum, maxWindowSum);
-        windowsSum -= arr[i-(k-1)];
+        windowsSum -= arr[i - (k - 1)];
       }
     }
+
     return maxWindowSum;
   }
 
@@ -46,27 +87,31 @@ public class ArraysTasks {
     return -1;
   }
 
-  public static String longestSubstringASCII(String s) {
-    int[] charIdx = new int[256];
-    Arrays.fill(charIdx, -1);
+  public static int[] mergeTwoSortedArrays(int[] arr1, int[] arr2) {
+    int n1 = arr1.length;
+    int n2 = arr2.length;
 
-    int bestLen = 0;
-    int left = 0;
-    int bestLeft = 0;
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    int[] result = new int[n1 + n2];
 
-    for (int i = 0; i < s.length(); i++) {
-      int c = s.charAt(i);
-      if (charIdx[c] >= left) {
-        left = charIdx[c] + 1;
-      }
-      int len = i - left + 1;
-      charIdx[c] = i;
-      if (len > bestLen) {
-        bestLen = len;
-        bestLeft = left;
+    while (i < n1 && j < n2) {
+      if (arr1[i] <= arr2[j]) {
+        result[k++] = arr1[i++];
+      } else {
+        result[k++] = arr2[j++];
       }
     }
 
-    return s.substring(bestLeft, bestLen);
+    while (i < n1) {
+      result[k++] = arr1[i++];
+    }
+
+    while (j < n2) {
+      result[k++] = arr2[j++];
+    }
+
+    return result;
   }
 }
