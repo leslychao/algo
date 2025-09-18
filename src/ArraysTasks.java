@@ -6,8 +6,37 @@ public class ArraysTasks {
     int[] arr1 = {1, 3, 8};
     int[] arr2 = {7, 9, 10, 11};
     int[] arr3 = {2, 1, 5, 1, 3, 2};
+    int[] arr4 = {1, 1, 2, 2, 2, 3, 5, 4};
 
-    System.out.println(Arrays.toString(mergeTwoSortedArrays(arr2, arr1)));
+    System.out.println(Arrays.toString(removeDuplicates(arr3)));
+  }
+
+  public static int[] removeDuplicatesSorted(int[] arr) {
+    Arrays.sort(arr);
+    int k = 1;
+    for (int i = 1; i < arr.length; i++) {
+      if (arr[i] != arr[i - 1]) {
+        arr[k++] = arr[i];
+      }
+    }
+    return Arrays.copyOfRange(arr, 0, k);
+  }
+
+  public static int[] removeDuplicates(int[] arr) {
+    int k = 0;
+    for (int i = 0; i < arr.length; i++) {
+      boolean found = false;
+      for (int j = 0; j < k; j++) {
+        if (arr[i] == arr[j]) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        arr[k++] = arr[i];
+      }
+    }
+    return Arrays.copyOfRange(arr, 0, k);
   }
 
   public static double mediansOfTwoArrays(int[] arr1, int[] arr2) {
